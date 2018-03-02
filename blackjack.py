@@ -1,3 +1,6 @@
+# Blackjack Game, try to beat the dealer!
+# !Add a score keeper!
+
 import random
 
 try:
