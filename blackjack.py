@@ -1,5 +1,4 @@
 # Blackjack Game, try to beat the dealer!
-# Add a score keeper!!
 
 import random
 
@@ -75,25 +74,37 @@ def deal_dealer():
 
     if player_score > 21:
         result_text.set("Dealer Wins!")
+        dealer_wins_label.set(dealer_wins_label.get() + 1)
+        button_state('disabled')
+        button_state(False)
     elif dealer_score > 21 or dealer_score < player_score:
         result_text.set("Player Wins!")
+        player_wins_label.set(player_wins_label.get() + 1)
+        button_state(False)
     elif dealer_score > player_score:
         result_text.set("Dealer Wins!")
+        dealer_wins_label.set(dealer_wins_label.get() + 1)
+        button_state(False)
     else:
         result_text.set("Draw!")
 
 
+# NEEDS FIXING FOR PLAYER SCORE WHEN DEALING PLAYER
 def deal_player():
     player_score = score_hand(player_hand)
-    if player_score > 21:
+    if player_score > 21:  # had 'and button_state is True:'
         result_text.set("Dealer Wins!")
+        dealer_wins_label.set(dealer_wins_label.get() + 1)
+        button_state(False)
     else:
         player_hand.append(deal_card(player_card_frame))
         player_score = score_hand(player_hand)
 
         player_score_label.set(player_score)
-        if player_score > 21:
+        if player_score > 21:  # had 'and button_state is True:'
             result_text.set("Dealer Wins!")
+            dealer_wins_label.set(dealer_wins_label.get() + 1)
+            button_state(False)
     #
     # global player_score
     # global player_ace
@@ -111,18 +122,34 @@ def deal_player():
     #     result_text.set("Dealer wins!")
     # print(locals())
 
+
+def button_state(state):
+    if state is True:
+        dealer_button.config(state='normal')
+        dealer_button.update()
+        player_button.config(state='normal')
+        player_button.update()
+        return True
+    if state is False:
+        dealer_button.config(state='disabled')
+        dealer_button.update()
+        player_button.config(state='disabled')
+        player_button.update()
+        return False
+
+
 def initial_deal():
     deal_player()
     dealer_hand.append(deal_card(dealer_card_frame))
     dealer_score_label.set(score_hand(dealer_hand))
     deal_player()
 
+
 def new_game():
     global dealer_hand
     global player_hand
     global dealer_card_frame
     global player_card_frame
-    global won
     # clear list
     dealer_hand = []
     player_hand = []
@@ -137,6 +164,8 @@ def new_game():
     player_card_frame.grid(row=2, column=1, sticky='ew', rowspan=2)
     # clear text
     result_text.set("")
+    # reset button state
+    button_state(True)
     # initialize game
     initial_deal()
 
@@ -164,17 +193,18 @@ result.grid(row=0, column=0, columnspan=3)
 card_frame = tkinter.Frame(mainWindow, relief="sunken", borderwidth=1, background="green")
 card_frame.grid(row=1, column=0, sticky='ew', columnspan=3, rowspan=2)
 
+# ROW 2
 dealer_score_label = tkinter.IntVar()
-tkinter.Label(card_frame, text="Dealer", background="green", fg='white').grid(row=0, column=0)
-tkinter.Label(card_frame, textvariable=dealer_score_label, background="green", fg="white").grid(row=1, column=0)
+tkinter.Label(card_frame, text="Dealer's Hand", background="green", fg='white').grid(row=0, column=0)
+tkinter.Label(card_frame, textvariable=dealer_score_label, font=("Arial", 18), background="green", fg="#202020").grid(row=1, column=0)
 # embedded frame to hold the card images
 dealer_card_frame = tkinter.Frame(card_frame, background="green")
 dealer_card_frame.grid(row=0, column=1, sticky="ew", rowspan=2)
 
+# ROW 3
 player_score_label = tkinter.IntVar()
-
-tkinter.Label(card_frame, text="Player", background="green", fg="white").grid(row=2, column=0)
-tkinter.Label(card_frame, textvariable=player_score_label, background="green", fg="white").grid(row=3, column=0)
+tkinter.Label(card_frame, text="Player's Hand", background="green", fg="white").grid(row=2, column=0)
+tkinter.Label(card_frame, textvariable=player_score_label, font=("Arial", 18), background="green", fg="#202020").grid(row=3, column=0)
 # embedded frame to hold the card images
 player_card_frame = tkinter.Frame(card_frame, background="green")
 player_card_frame.grid(row=2, column=1, sticky='ew', rowspan=2)
@@ -193,6 +223,29 @@ new_game_button.grid(row=0, column=2)
 
 shuffle_button = tkinter.Button(button_frame, text="Shuffle", command=shuffle)
 shuffle_button.grid(row=0, column=3)
+
+
+# Overall Score Title Text
+score_title_text = tkinter.StringVar()
+score_title = tkinter.Label(mainWindow, textvariable=score_title_text, background="green", fg='#100000', font=("Arial", 18))
+
+score_title.grid(row=5, column=4, sticky='s', columnspan=3, pady=(20, 3))
+score_title_text.set("Overall Score")
+
+# score for players
+score_frame = tkinter.Frame(mainWindow, relief="sunken", borderwidth=1, background="green")
+score_frame.grid(row=6, column=4, sticky='ew', columnspan=3, rowspan=1)
+
+# player overall score
+player_wins_label = tkinter.IntVar()
+tkinter.Label(score_frame, text="Player", background="green", fg='white').grid(row=0, column=0)
+tkinter.Label(score_frame, textvariable=player_wins_label, background="green", fg="#202020").grid(row=4, column=0)
+
+# dealer overall score
+dealer_wins_label = tkinter.IntVar()
+tkinter.Label(score_frame, text="Dealer", background="green", fg='white').grid(row=0, column=5, padx=(20,0))
+tkinter.Label(score_frame, textvariable=dealer_wins_label, background="green", fg="#202020").grid(row=4, column=5, padx=(20,0))
+
 
 # load cards
 cards = []

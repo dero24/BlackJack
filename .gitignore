@@ -8,4 +8,8 @@ Test2.py
 Test3.py
 tkinter.iml
 __pycache__
+<<<<<<< HEAD
 .idea/workspace.xml
+=======
+.idea/vcs.xml
+>>>>>>> score
