@@ -92,7 +92,7 @@ def deal_dealer():
 # NEEDS FIXING FOR PLAYER SCORE WHEN DEALING PLAYER
 def deal_player():
     player_score = score_hand(player_hand)
-    if player_score > 21:  # had 'and button_state is True:'
+    if player_score > 21:
         result_text.set("Dealer Wins!")
         dealer_wins_label.set(dealer_wins_label.get() + 1)
         button_state(False)
@@ -101,7 +101,7 @@ def deal_player():
         player_score = score_hand(player_hand)
 
         player_score_label.set(player_score)
-        if player_score > 21:  # had 'and button_state is True:'
+        if player_score > 21:
             result_text.set("Dealer Wins!")
             dealer_wins_label.set(dealer_wins_label.get() + 1)
             button_state(False)
